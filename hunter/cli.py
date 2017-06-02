@@ -1,4 +1,5 @@
 # Copyright 2015 Alan Vezina. All rights reserved.
+from __future__ import print_function, absolute_import, unicode_literals
 import argparse
 from csv import DictReader
 import json
@@ -18,7 +19,7 @@ def reduce_sources(sources):
     return ';'.join(reduce(reducer, sources, []))
 
 
-def validate_search_file(reader: DictReader):
+def validate_search_file(reader):
     field_names = reader.fieldnames
 
     if 'domain' not in field_names:
@@ -28,7 +29,7 @@ def validate_search_file(reader: DictReader):
     return True
 
 
-def validate_find_file(reader: DictReader):
+def validate_find_file(reader):
     valid = True
     field_names = reader.fieldnames
 
@@ -44,7 +45,7 @@ def validate_find_file(reader: DictReader):
     return valid
 
 
-def validate_verify_file(reader: DictReader):
+def validate_verify_file(reader):
     field_names = reader.fieldnames
 
     if 'email' not in field_names:
@@ -54,7 +55,7 @@ def validate_verify_file(reader: DictReader):
     return True
 
 
-def search(client: HunterClient, domain, limit, offset, type_, print_header=True, is_file_output=False):
+def search(client, domain, limit, offset, type_, print_header=True, is_file_output=False):
     if is_file_output:
         header = 'domain,email,type,sources'
         line_format = '{},{},{},{}'
@@ -79,7 +80,7 @@ def search(client: HunterClient, domain, limit, offset, type_, print_header=True
             print(line_format.format(domain, email, type_, sources))
 
 
-def find(client: HunterClient, domain, first_name, last_name, print_header=True, is_file_output=False):
+def find(client, domain, first_name, last_name, print_header=True, is_file_output=False):
     try:
         data = client.find(domain, first_name, last_name)
     except Exception as e:
@@ -100,7 +101,7 @@ def find(client: HunterClient, domain, first_name, last_name, print_header=True,
             print('Sources:\t{}'.format(json.dumps(sources, indent=2)))
 
 
-def verify(client: HunterClient, email, print_header=True, is_file_output=False):
+def verify(client, email, print_header=True, is_file_output=False):
     try:
         data = client.verify(email)
     except Exception as e:
@@ -119,7 +120,7 @@ def verify(client: HunterClient, email, print_header=True, is_file_output=False)
             print('Sources:\t{}'.format(json.dumps(sources, indent=2)))
 
 
-def handle_search_file(client: HunterClient, reader: DictReader):
+def handle_search_file(client, reader):
     if not validate_search_file(reader):
         return
 
@@ -135,7 +136,7 @@ def handle_search_file(client: HunterClient, reader: DictReader):
         time.sleep(THROTTLE)
 
 
-def handle_find_file(client: HunterClient, reader: DictReader):
+def handle_find_file(client, reader):
     if not validate_find_file(reader):
         return
 
@@ -150,7 +151,7 @@ def handle_find_file(client: HunterClient, reader: DictReader):
         time.sleep(THROTTLE)
 
 
-def handle_verify_file(client: HunterClient, reader: DictReader):
+def handle_verify_file(client, reader):
     if not validate_verify_file(reader):
         return
 
