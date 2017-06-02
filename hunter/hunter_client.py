@@ -16,7 +16,7 @@ class HunterClient:
 
         return data
 
-    def search(self, domain, limit=10, offset=0, type_=None):
+    def search(self, domain, limit=10, offset=0, type_=None, raw=False):
         """
         Returns all the email addresses found using one given domain name, with Email Hunter's sources.
         :param domain: The domain name to check for email addresses
@@ -30,6 +30,8 @@ class HunterClient:
 
         data = self._make_request(url, payload)
 
+        if raw:
+            return data
         return data['data']
 
     def find(self, domain, first_name, last_name):
